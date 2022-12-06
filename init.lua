@@ -12,23 +12,18 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
---vim.opt.listchars:append({space = '|'})
+vim.opt.smartcase = true
+vim.opt.hlsearch = false
 
+--vim.opt.listchars:append({space = '|'})
+--to enable code in lua dir you need to requir it
 require('packer-plugin')
 require('my_remaps')
 require('custom_autocmd')
+require('dwm_autocmd')
 
-vim.cmd('colorscheme base16-gruvbox-dark-soft')
+vim.cmd('colorscheme base16-brushtrees')
+--vim.cmd('colorscheme base16-tokyo-night-terminal-dark')
 
 vim.cmd[[command! Resethl              lua require'custom_functions'.resethl()]]
 vim.cmd[[command! -bang -nargs=* Fzfnn call fzf#run(fzf#wrap({'source': 'ls -r', 'sink': 'e', 'options': '--preview="cat {}" --preview-window=up,wrap,~1 --multi'},<bang>0))]]
-
-vim.api.nvim_create_autocmd(
-    { "BufWritePost" },
-    { pattern = { "/home/qq/Documents/dwmblocks/config.h" }, command = "!cd /home/qq/Documents/dwmblocks; secret-tool lookup user iurii service sudo | sudo -S make install && { killall -q dwmblocks; setsid dwmblocks & }" }
-)
-
-vim.api.nvim_create_autocmd(
-    { "BufWritePost" },
-    { pattern = { "/home/qq/Documents/dwm/config.h" }, command = "!cd /home/qq/Documents/dwm; secret-tool lookup user iurii service sudo | sudo -S make install && sc-renewwm" }
-)
