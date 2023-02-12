@@ -9,3 +9,8 @@ vim.api.nvim_create_autocmd("FileType", {
        --vim.opt.listchars:append({space = '|'})
     end
 })
+
+--vim.api.nvim_create_autocmd(
+--    { "BufLeave" },
+--    { pattern = { "*.md" }, command = "w" }
+--)

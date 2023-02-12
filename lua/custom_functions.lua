@@ -64,7 +64,7 @@ function M.currentNoteId()
     return id
 end
 
-local note_template = "\ntags: #N\n- "
+local note_template = "\ntag: N\n- "
 
 function M.createID()
     local ztl = M.ztltime()
@@ -103,8 +103,9 @@ function M.currentLink()
     local header = file:read()
     -- closes the opened file
     file:close()
-    local link = "\n" .. M.cleanHeadline(header):lower() .. " [[" .. id .. "]]"
+    local link = M.cleanHeadline(header):lower() .. " [[" .. id .. "]]"
     vim.fn.setreg('+', link)
 end
+
 
 return M
