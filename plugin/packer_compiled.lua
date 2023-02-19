@@ -74,6 +74,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["align.nvim"] = {
+    loaded = true,
+    path = "/home/qq/.local/share/nvim/site/pack/packer/start/align.nvim",
+    url = "https://github.com/Vonr/align.nvim"
+  },
   ["clipboard-image.nvim"] = {
     loaded = true,
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/clipboard-image.nvim",
@@ -88,6 +93,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/hop.nvim",
     url = "https://github.com/phaazon/hop.nvim"
+  },
+  ["indent-blankline.nvim"] = {
+    loaded = true,
+    path = "/home/qq/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim",
+    url = "https://github.com/lukas-reineke/indent-blankline.nvim"
   },
   ["lualine.nvim"] = {
     loaded = true,
@@ -135,6 +145,11 @@ _G.packer_plugins = {
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["utl.vim"] = {
+    loaded = true,
+    path = "/home/qq/.local/share/nvim/site/pack/packer/start/utl.vim",
+    url = "https://github.com/vim-scripts/utl.vim"
+  },
   ["vim-easy-align"] = {
     loaded = true,
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/vim-easy-align",
@@ -150,6 +165,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/which-key.nvim",
     url = "https://github.com/folke/which-key.nvim"
+  },
+  ["wilder.nvim"] = {
+    loaded = true,
+    path = "/home/qq/.local/share/nvim/site/pack/packer/start/wilder.nvim",
+    url = "https://github.com/gelguy/wilder.nvim"
   }
 }
 

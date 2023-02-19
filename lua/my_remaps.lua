@@ -1,9 +1,9 @@
 -- Mappings
-vim.keymap.set('n', '<c-s>', ':w<cr>', {desc = 'Save file'})
+--vim.keymap.set('n', '<c-s>', ':w<cr>', {desc = 'Save file'})
 vim.keymap.set({'n', 'v'}, '<Leader>y', '"+y', {desc = 'Save to global clipboard'})
 vim.keymap.set('n', '<Leader>p', '"+p', {desc = 'Past from global clipboard'})
 --vim.keymap.set('n', '<leader>no', ':lua require("telescope.builtin").grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true, search = "" })<CR>', {desc = 'open note'})
-vim.keymap.set('n', '<leader>no', ':lua require("fzf_lua").live_grep()<CR>', {desc = 'find and open note through telescope'})
+vim.keymap.set('n', '<leader>no', ':lua require("fzf-lua").grep()<CR>', {desc = 'find and open note through telescope'})
 --vim.keymap.set('n', '<leader>zn', ':ZettelNew<space>', {desc = 'new note'})
 --vim.keymap.set({'i', 'n'}, '<C-k>', '<esc>:lua require("custom_telescope").insertId()<CR>', {desc = 'for any note [[ID]] insert'})
 vim.keymap.set({'i', 'n'}, '<C-k>', '<esc>:lua require("custom_fzf_lua").insertId()<CR>', {desc = 'for any note [[ID]] insert'})
