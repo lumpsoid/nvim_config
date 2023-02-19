@@ -67,4 +67,26 @@ return require('packer').startup(function(use)
     }
     -- минималистичный вид для написания текстов
     -- use 'junegunn/goyo.vim'
+
+    use {
+        'ibhagwan/fzf-lua',
+        -- optional for icon support
+        requires = { 'nvim-tree/nvim-web-devicons' }
+    }
+
+    use {
+        "lukas-reineke/indent-blankline.nvim"
+    }
+
+    use {
+      'gelguy/wilder.nvim',
+    }
+
+    use {
+      'vim-scripts/utl.vim',
+    }
+
+    use {
+        'Vonr/align.nvim',
+    }
 end)

@@ -133,14 +133,14 @@ function M.insertLink()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           --print(vim.inspect(selection))
-          path_to_file = getmetatable(selection).cwd .. "/" .. selection.filename
+          local path_to_file = getmetatable(selection).cwd .. "/" .. selection.filename
           -- Opens a file in read mode
           local file = io.open(path_to_file, "r")
           -- prints the first line of the file
           local header = file:read()
           -- closes the opened file
           file:close()
-          selection =  require("custom_functions").cleanHeadline(header):lower() .. " [[" .. selection.filename:sub(1,14) .. "]]"
+          local selection =  require("custom_functions").cleanHeadline(header):lower() .. " [[" .. selection.filename:sub(1,14) .. "]]"
           vim.api.nvim_put({ selection }, "", false, true)
         end)
         return true

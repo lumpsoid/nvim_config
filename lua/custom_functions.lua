@@ -64,22 +64,6 @@ function M.currentNoteId()
     return id
 end
 
-local note_template = "\ntag: N\n- "
-
-function M.createID()
-    local ztl = M.ztltime()
-    local file_path = "/home/qq/Documents/i/" .. ztl .. ".md"
-    local line = vim.api.nvim_get_current_line()
-    line = M.cleanline(line)
-    local text = '# ' .. line .. note_template
-    -- можно использовать для этого nvim.api.nvim_put()
-    M.writefile(file_path, text)
-    M.textinsert(M.linkwrap(ztl))
-    local pos = vim.api.nvim_win_get_cursor(0)
-    vim.api.nvim_win_set_cursor(0, {pos[1],pos[2]+1})
-    mkdn.links.followLink()
-end
-
 function M.backlinks()
     vim.fn.setreg('"', "'"..currentNoteId())
 end
@@ -105,7 +89,24 @@ function M.currentLink()
     file:close()
     local link = M.cleanHeadline(header):lower() .. " [[" .. id .. "]]"
     vim.fn.setreg('+', link)
+    return link
 end
 
+local note_template = "\ntag: N\n- "
+
+function M.createID()
+    local main_note = M.currentLink()
+    local ztl = M.ztltime()
+    local file_path = "/home/qq/Documents/i/" .. ztl .. ".md"
+    local line = vim.api.nvim_get_current_line()
+    line = M.cleanline(line)
+    local text = '# ' .. line .. note_template .. '\n\n' .. main_note
+    -- можно использовать для этого nvim.api.nvim_put()
+    M.writefile(file_path, text)
+    M.textinsert(M.linkwrap(ztl))
+    local pos = vim.api.nvim_win_get_cursor(0)
+    vim.api.nvim_win_set_cursor(0, {pos[1],pos[2]+1})
+    mkdn.links.followLink()
+end
 
 return M

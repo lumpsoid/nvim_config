@@ -79,6 +79,11 @@ _G.packer_plugins = {
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/clipboard-image.nvim",
     url = "https://github.com/ekickx/clipboard-image.nvim"
   },
+  ["fzf-lua"] = {
+    loaded = true,
+    path = "/home/qq/.local/share/nvim/site/pack/packer/start/fzf-lua",
+    url = "https://github.com/ibhagwan/fzf-lua"
+  },
   ["hop.nvim"] = {
     loaded = true,
     path = "/home/qq/.local/share/nvim/site/pack/packer/start/hop.nvim",
