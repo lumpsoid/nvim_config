@@ -97,7 +97,12 @@ local note_template = "\ntag: N\n- "
 function M.createID()
     local main_note = M.currentLink()
     local ztl = M.ztltime()
-    local file_path = "/home/qq/Documents/i/" .. ztl .. ".md"
+    -- dynamicly take current folder to create note in it
+    local pattern = "(.-)[^/]-$"
+    local current_folder = vim.fn.getreg('%')
+    current_folder = current_folder:match(pattern)
+
+    local file_path = current_folder .. ztl .. ".md"
     local line = vim.api.nvim_get_current_line()
     line = M.cleanline(line)
     local text = '# ' .. line .. note_template .. '\n\n' .. main_note

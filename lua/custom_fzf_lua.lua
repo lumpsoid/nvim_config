@@ -1,5 +1,6 @@
 local M = {}
 
+
 function M.insertHeadId()
     require('fzf-lua').grep({
       search = '',
@@ -9,6 +10,11 @@ function M.insertHeadId()
           fzf = {
               ["shift-down"] = "preview-half-page-down",
               ["shift-up"] = "preview-half-page-up",
+          }
+      },
+      winopts = {
+          preview = {
+              horizontal = 'down:60%'
           }
       },
       actions = {
@@ -24,7 +30,7 @@ function M.insertHeadId()
             local ztl_id = "[[" .. file_md:sub(1,14) .. "]]"
 
             local output = require("custom_functions").cleanHeadline(header):lower() .. " " .. ztl_id
-            vim.api.nvim_put({ output }, "", false, true)
+            vim.api.nvim_put({ output }, "", true, true)
           end
       }
     })
@@ -41,14 +47,37 @@ function M.insertId()
               ["shift-up"] = "preview-half-page-up",
           }
       },
+      winopts = {
+          preview = {
+              horizontal = 'down:60%'
+          }
+      },
       actions = {
         ['default'] = function(selected)
             local file_md = string.match(selected[1], "[0-9]+%.md")
             local ztl_id = "[[" .. file_md:sub(1,14) .. "]]"
-            vim.api.nvim_put({ ztl_id }, "", false, true)
+            vim.api.nvim_put({ ztl_id }, "", true, true)
           end
       }
     })
 end
 
+function M.openFile()
+    require('fzf-lua').grep({
+      search = '',
+      fzf_cli_args = '--preview-window=~1',
+      previewer = 'bat',
+      keymap = {
+          fzf = {
+              ["shift-down"] = "preview-half-page-down",
+              ["shift-up"] = "preview-half-page-up",
+          }
+      },
+      winopts = {
+          preview = {
+              horizontal = 'down:60%'
+          }
+      },
+    })
+end
 return M
