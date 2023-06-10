@@ -89,4 +89,12 @@ return require('packer').startup(function(use)
     use {
         'Vonr/align.nvim',
     }
+
+    -- lsp config
+    use {
+        "williamboman/mason.nvim",
+        "williamboman/mason-lspconfig.nvim",
+        "neovim/nvim-lspconfig",
+        ft = {'md'}
+    }
 end)
