@@ -12,8 +12,8 @@ vim.keymap.set('n', ',j', ':HopLineMW<CR>', {desc = 'two way line'})
 vim.keymap.set('n', ',p', ':HopPatternMW<CR>', {desc = 'Pattern in all visible buffers'})
 vim.keymap.set(
                 'n', 
-                '<Tab>', 
+                '<leader>o', 
                 [[:lua require"hop-custom".hint_wikilink_follow("\\[\\[")<CR>]], 
-                {desc = 'Pattern in all visible buffers'}
+                {desc = 'Find all notes [[timestamp]]'}
 )
 --keys = 'etovxqpdygfblzhckisuran'

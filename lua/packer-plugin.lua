@@ -2,6 +2,7 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
+    use 'stevearc/oil.nvim'
     -- пока не понимаю зачем именно
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -14,8 +15,7 @@ return require('packer').startup(function(use)
     -- use 'ferrine/md-img-paste.vim'
     use 'ekickx/clipboard-image.nvim'
 
-    -- Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-    use 'junegunn/vim-easy-align'
+
 
     -- VimWiki
     --  use 'vimwiki/vimwiki'
@@ -26,11 +26,13 @@ return require('packer').startup(function(use)
     -- use 'junegunn/fzf'
     -- use 'junegunn/fzf.vim'
     --  use 'alok/notational-fzf-vim'
+
     use({
         'jakewvincent/mkdnflow.nvim',
         rocks = 'luautf8', -- Ensures optional luautf8 dependency is installed
+        ft = { 'md' },
+        config = function () require(configs.mkdnflow-lazy) end
     })
-    
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
@@ -62,11 +64,7 @@ return require('packer').startup(function(use)
         'phaazon/hop.nvim',
         branch = 'v2', -- optional but strongly recommended
     }
-    use {
-        'RRethy/nvim-base16'
-    }
-    -- минималистичный вид для написания текстов
-    -- use 'junegunn/goyo.vim'
+    use { 'RRethy/nvim-base16' }
 
     use {
         'ibhagwan/fzf-lua',
@@ -74,27 +72,62 @@ return require('packer').startup(function(use)
         requires = { 'nvim-tree/nvim-web-devicons' }
     }
 
-    use {
-        "lukas-reineke/indent-blankline.nvim"
-    }
+    use { "lukas-reineke/indent-blankline.nvim" }
 
-    use {
-      'gelguy/wilder.nvim',
-    }
+    use { 'gelguy/wilder.nvim', }
 
-    use {
-      'vim-scripts/utl.vim',
-    }
+    use { 'vim-scripts/utl.vim', }
 
-    use {
-        'Vonr/align.nvim',
-    }
+    use 'Vonr/align.nvim'
+    -- Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+    use 'junegunn/vim-easy-align'
+
+    --completion
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/nvim-cmp'
+    use "L3MON4D3/LuaSnip"
+    use 'saadparwaiz1/cmp_luasnip'
+    use "rafamadriz/friendly-snippets"
 
     -- lsp config
     use {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "neovim/nvim-lspconfig",
-        ft = {'md'}
+        --linting
+        'jay-babu/mason-null-ls.nvim',
+        'jose-elias-alvarez/null-ls.nvim',
+    }
+    --dap
+    use {
+        'mfussenegger/nvim-dap',
+    }
+    use {
+        "rcarriga/nvim-dap-ui",
+        config = function()
+            local dap = require("dap")
+            local dapui = require("dapui")
+            dapui.setup()
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+                dapui.close()
+            end
+        end,
+    }
+    use {
+        'mfussenegger/nvim-dap-python',
+        ft = "python",
+        config = function() require('configs.dap-python') end
+    }
+    --repl
+    use {
+        'Vigemus/iron.nvim',
+        ft = "python",
+        config = function() require('configs.iron-lazy') end
     }
 end)

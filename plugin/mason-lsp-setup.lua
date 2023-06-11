@@ -1,4 +1,8 @@
-require("mason").setup()
+require("mason").setup({
+    ensure_installed = {
+        "debugpy"
+    },
+})
 require("mason-lspconfig").setup {
     ensure_installed = {
         "lua_ls",
@@ -7,9 +11,23 @@ require("mason-lspconfig").setup {
         "sqlls",
         "bashls",
         "cssls",
-        "html"
+        "html",
     },
 }
+require("mason-null-ls").setup({
+    ensure_installed = {
+        -- Opt to list sources here, when available in mason.
+        "ruff",
+        "mypy"
+    },
+    automatic_installation = false,
+    handlers = {},
+})
+require("null-ls").setup({
+    sources = {
+        -- Anything not supported by mason.
+    }
+})
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
@@ -44,13 +62,18 @@ local on_attach = function(client, bufnr)
     vim.keymap.set("n", "gr", require('fzf-lua').lsp_references, bufopts)
 end
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 require("lspconfig").lua_ls.setup {
-    on_attach = on_attach
+    on_attach = on_attach,
+    capabilitites = capabilities
 }
 
 require("lspconfig").pyright.setup {
-    on_attach = on_attach
+    on_attach = on_attach,
+    capabilitites = capabilities
 }
 require("lspconfig").rust_analyzer.setup {
-    on_attach = on_attach
+    on_attach = on_attach,
+    capabilitites = capabilities
 }
