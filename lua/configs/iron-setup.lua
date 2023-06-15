@@ -13,13 +13,13 @@ iron.setup {
     },
     -- How the repl window will be displayed
     -- See below for more information
-    repl_open_cmd = view.split.vertical.botright(60)
+    repl_open_cmd = view.split.vertical.botright('40%')
   },
   -- Iron doesn't set keymaps by default anymore.
   -- You can set them here or manually add keymaps to the functions in iron.core
   keymaps = {
     send_motion = "<space>sc",
-    visual_send = "<space>sc",
+    visual_send = "<space>r",
     send_file = "<space>sf",
     send_line = "<space>sl",
     send_until_cursor = "<space>su",
@@ -40,6 +40,7 @@ iron.setup {
   ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
 }
 
+vim.keymap.set('n', '<space>sb', 'vip:lua require("iron").core.visual_send()<cr>')
 -- iron also has a list of commands, see :h iron-commands for all available commands
 vim.keymap.set('n', '<space>rs', '<cmd>IronRepl<cr>')
 vim.keymap.set('n', '<space>rr', '<cmd>IronRestart<cr>')

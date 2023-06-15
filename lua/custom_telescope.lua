@@ -12,8 +12,8 @@ local flatten = vim.tbl_flatten
 local M = {}
 
 function M.findAroundNote()
-    current_note = require("custom_functions").aroundNote()
-  opts = opts or {}
+  local current_note = require("custom_functions").aroundNote()
+  local opts = opts or {}
   pickers.new(opts, {
     prompt_title = "Around Note",
     previewer = previewers.vim_buffer_cat.new(opts),
@@ -23,7 +23,7 @@ function M.findAroundNote()
 end
 
 function M.listOfNotes()
-  opts = opts or {}
+  local opts = opts or {}
   pickers.new(opts, {
     prompt_title = "List of Notes",
     previewer = previewers.vim_buffer_cat.new(opts),
@@ -33,12 +33,12 @@ function M.listOfNotes()
 end
 
 function M.backlinksSearch()
-    note = require("custom_functions").currentNoteId()
+    local note = require("custom_functions").currentNoteId()
     require('telescope.builtin').grep_string({search=note})
 end
 
 function M.insertId()
-  opts = opts or {}
+  local opts = opts or {}
   local vimgrep_arguments = opts.vimgrep_arguments or conf.vimgrep_arguments
   local search_dirs = opts.search_dirs
   local grep_open_files = opts.grep_open_files
@@ -97,7 +97,7 @@ end
 --end
 
 function M.insertLink()
-  opts = opts or {}
+  local opts = opts or {}
   local vimgrep_arguments = opts.vimgrep_arguments or conf.vimgrep_arguments
   local search_dirs = opts.search_dirs
   local grep_open_files = opts.grep_open_files

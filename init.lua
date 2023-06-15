@@ -17,7 +17,7 @@ vim.opt.hlsearch = false
 
 --vim.opt.listchars:append({space = '|'})
 --to enable code in lua dir you need to requir it
-require('packer-plugin')
+require('plugins')
 require('my_remaps')
 require('custom_autocmd')
 require('dwm_autocmd')

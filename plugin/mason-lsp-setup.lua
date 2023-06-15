@@ -17,8 +17,7 @@ require("mason-lspconfig").setup {
 require("mason-null-ls").setup({
     ensure_installed = {
         -- Opt to list sources here, when available in mason.
-        "ruff",
-        "mypy"
+        "ruff"
     },
     automatic_installation = false,
     handlers = {},

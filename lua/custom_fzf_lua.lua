@@ -1,6 +1,65 @@
 local M = {}
 
 
+function M.backlinks()
+    local note = require("custom_functions").currentNoteId()
+    require('fzf-lua').grep({
+      search = note,
+      fzf_cli_args = '--preview-window=~1',
+      previewer = 'bat',
+      keymap = {
+          fzf = {
+              ["shift-down"] = "preview-half-page-down",
+              ["shift-up"] = "preview-half-page-up",
+          }
+      },
+      winopts = {
+          preview = {
+              horizontal = 'down:60%'
+          }
+      },
+    })
+end
+
+function M.findAroundNote()
+    local current_note = require("custom_functions").aroundNote()
+    require('fzf-lua').files({
+        cmd = "ls" .. " " .. current_note,
+        fzf_cli_args = '--preview-window=~1',
+        previewer = 'bat',
+        keymap = {
+            fzf = {
+                ["shift-down"] = "preview-half-page-down",
+                ["shift-up"] = "preview-half-page-up",
+            }
+        },
+        winopts = {
+            preview = {
+                horizontal = 'down:60%'
+            }
+        },
+})
+end
+
+function M.listOfNotes()
+    require('fzf-lua').files({
+        cmd = "rg --files -g *.md --sortr=path",
+        fzf_cli_args = '--preview-window=~1',
+        previewer = 'bat',
+        keymap = {
+            fzf = {
+                ["shift-down"] = "preview-half-page-down",
+                ["shift-up"] = "preview-half-page-up",
+            }
+        },
+        winopts = {
+            preview = {
+                horizontal = 'down:60%'
+            }
+        },
+})
+end
+
 function M.insertHeadId()
     require('fzf-lua').grep({
       search = '',
