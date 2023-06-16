@@ -10,10 +10,10 @@ function M.sleep(n)
   os.execute("sleep " .. tonumber(n))
 end
 
-function M.sleep_sec(a) 
-    local sec = tonumber(os.clock() + a); 
-    while (os.clock() < sec) do 
-    end 
+function M.sleep_sec(a)
+    local sec = tonumber(os.clock() + a);
+    while (os.clock() < sec) do
+    end
 end
 
 function M.textinsert(text)
@@ -75,12 +75,18 @@ function M.aroundNote()
 end
 
 function M.delCurrentFile()
-    vim.cmd[[call delete(expand('%')) | bdelete!]]
+    vim.ui.select({ 'yes', 'no' }, {
+    prompt = 'Select Yes or No:',
+    }, function(choice)
+        if choice == 'yes' then
+            vim.cmd[[call delete(expand('%')) | bdelete!]]
+        end
+    end)
 end
 
 function M.currentLink()
-    local path_to_file = vim.fn.getreg('%')
-    local _,_,id = path_to_file:find('([0-9]+)')
+    local path_to_file = vim.api.nvim_buf_get_name(0)
+    local id = vim.fn.fnamemodify(path_to_file, ":t:r")
     -- Opens a file in read mode
     local file = io.open(path_to_file, "r")
     -- prints the first line of the file
@@ -98,14 +104,11 @@ function M.createID()
     local main_note = M.currentLink()
     local ztl = M.ztltime()
     -- dynamicly take current folder to create note in it
-    local pattern = "(.-)[^/]-$"
-    local current_folder = vim.fn.getreg('%')
-    current_folder = current_folder:match(pattern)
-
-    local file_path = current_folder .. ztl .. ".md"
-    local line = vim.api.nvim_get_current_line()
-    line = M.cleanline(line)
-    local text = '# ' .. line .. note_template .. '\n\n' .. main_note
+    local current_folder = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+    local file_path = current_folder .. '/' .. ztl .. ".md"
+    local new_header = vim.api.nvim_get_current_line()
+    new_header = M.cleanline(new_header)
+    local text = '# ' .. new_header .. note_template .. '\n\n' .. main_note
     -- можно использовать для этого nvim.api.nvim_put()
     M.writefile(file_path, text)
     M.textinsert(M.linkwrap(ztl))

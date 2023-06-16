@@ -1,6 +1,5 @@
 local M = {}
 
-
 function M.backlinks()
     local note = require("custom_functions").currentNoteId()
     require('fzf-lua').grep({

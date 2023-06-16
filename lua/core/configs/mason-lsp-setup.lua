@@ -14,19 +14,6 @@ require("mason-lspconfig").setup {
         "html",
     },
 }
-require("mason-null-ls").setup({
-    ensure_installed = {
-        -- Opt to list sources here, when available in mason.
-        "ruff"
-    },
-    automatic_installation = false,
-    handlers = {},
-})
-require("null-ls").setup({
-    sources = {
-        -- Anything not supported by mason.
-    }
-})
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)

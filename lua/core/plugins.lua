@@ -11,16 +11,21 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 local plugins = {
-
-    'wbthomason/packer.nvim',
-
-    'stevearc/oil.nvim',
+    'nvim-tree/nvim-web-devicons',
+    {
+        'stevearc/oil.nvim',
+        config = function()
+            require('core.configs.oil-setup')
+        end
+    },
     -- пока не понимаю зачем именно
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':lua require("nvim-treesitter.install").update({ with_sync = true })',
+        config = function()
+            require('core.configs.treesitter-setup')
+        end
     },
     -- автоматический свитчер layouts
     {
@@ -40,7 +45,7 @@ local plugins = {
         'jakewvincent/mkdnflow.nvim',
         ft = { 'markdown' },
         config = function ()
-            require('configs.mkdnflow-setup')
+            require('core.configs.mkdnflow-setup')
         end
     },
 
@@ -56,39 +61,81 @@ local plugins = {
     },
     {
         'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
+        enabled = true,
+        dependencies = { 'nvim-tree/nvim-web-devicons', opt = true },
+        config = function()
+            require('core.configs.lualine-setup')
+        end
     },
     -- удобно перемещаться по словам
     -- use 'easymotion/vim-easymotion'
     {
         'phaazon/hop.nvim',
         branch = 'v2', -- optional but strongly recommended
+        config = function()
+            require('core.configs.hop-setup')
+        end
     },
     { 'RRethy/nvim-base16' },
     {
         'ibhagwan/fzf-lua',
         -- optional for icon support
-        dependencies = { 'nvim-tree/nvim-web-devicons' }
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = function ()
+           require('fzf-lua').setup({'skim'})
+        end
     },
-    { "lukas-reineke/indent-blankline.nvim" },
-    { 'gelguy/wilder.nvim', },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        config = function()
+            require('core.configs.indent-blankline')
+        end
+    },
+    {
+        'gelguy/wilder.nvim',
+        config = function()
+            require('core.configs.wilder')
+        end
+    },
     { 'vim-scripts/utl.vim', },
     'Vonr/align.nvim',
     -- Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
     'junegunn/vim-easy-align',
     --completion
     'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/nvim-cmp',
     'L3MON4D3/LuaSnip',
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
+    {
+        'hrsh7th/nvim-cmp',
+        config = function()
+            require('core.configs.cmp-setup')
+        end
+    },
+
+    {"nvim-lua/plenary.nvim"},
     -- lsp config
     {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+    },
+    {
         "neovim/nvim-lspconfig",
+        dependecies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+        },
+        ft = {
+            'python',
+            'rust',
+            'lua',
+        },
+        config = function()
+            require('core.configs.mason-lsp-setup')
+        end
     },
     --linting
+    {'jay-babu/mason-null-ls.nvim'},
     {
         'jose-elias-alvarez/null-ls.nvim',
         dependencies = {
@@ -96,8 +143,6 @@ local plugins = {
             'jay-babu/mason-null-ls.nvim',
         },
     },
-    {'jay-babu/mason-null-ls.nvim'},
-    {"nvim-lua/plenary.nvim"},
     --dap
     {
         'mfussenegger/nvim-dap',
@@ -129,18 +174,10 @@ local plugins = {
             'rcarriga/nvim-dap-ui',
         },
         config = function ()
-            require('configs.dap-python')
+            require('core.configs.dap-python')
         end
     },
     --repl
-    {
-        'Vigemus/iron.nvim',
-        enabled = false,
-        ft = "python",
-        config = function ()
-            require('configs.iron-setup')
-        end,
-    },
     {
         "WhiteBlackGoose/magma-nvim-goose",
         enabled = true,
@@ -160,7 +197,7 @@ local plugins = {
             },
         },
         config = function ()
-            require('configs.magma-setup')
+            require('core.configs.magma-setup')
         end,
     },
 }
