@@ -9,7 +9,16 @@ vim.api.nvim_create_autocmd("FileType", {
        --vim.opt.listchars:append({space = '|'})
     end
 })
-
+vim.api.nvim_create_autocmd(
+    { "BufEnter" }, 
+    {
+        pattern = "*.md", 
+        callback = function()
+            vim.cmd([[source /home/qq/.config/nvim/lua/core/mappings/md-mappings.lua]])
+       --vim.opt.listchars:append({space = '|'})
+        end
+    }
+)
 --vim.api.nvim_create_autocmd(
 --    { "BufLeave" },
 --    { pattern = { "*.md" }, command = "w" }

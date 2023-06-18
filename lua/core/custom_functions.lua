@@ -59,13 +59,13 @@ function M.cleanHeadline(line)
 end
 
 function M.currentNoteId()
-    local ztl = vim.fn.getreg('%')
-    _,_,id = ztl:find('([0-9]+)')
+    local path_to_file = vim.api.nvim_buf_get_name(0)
+    local id = vim.fn.fnamemodify(path_to_file, ":t:r")
     return id
 end
 
 function M.backlinks()
-    vim.fn.setreg('"', "'"..currentNoteId())
+    vim.fn.setreg('"', "'"..M.currentNoteId())
 end
 
 function M.aroundNote()

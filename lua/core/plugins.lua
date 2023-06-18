@@ -30,10 +30,10 @@ local plugins = {
     -- автоматический свитчер layouts
     {
         'lyokha/vim-xkbswitch',
-        enabled = false,
-        config = function ()
-            --vim.g['XkbSwitchEnabled'] = 1
-            --vim.g.XkbSwitchLib = '/home/qq/Applications/xkb-switch/build/libxkbswitch.so'
+        enabled = true,
+        init = function ()
+            vim.g.XkbSwitchLib = '/home/qq/Applications/xkb-switch/build/libxkbswitch.so'
+            vim.g.XkbSwitchEnabled = 1
         end
     },
 
@@ -122,7 +122,7 @@ local plugins = {
     },
     {
         "neovim/nvim-lspconfig",
-        dependecies = {
+        dependencies = {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
         },
@@ -183,7 +183,6 @@ local plugins = {
         "WhiteBlackGoose/magma-nvim-goose",
         enabled = true,
         version = "*",
-        run = "UpdateRemotePlugins",
         keys = {
             { "<leader>mi", "<cmd>MagmaInit<CR>", desc = "This command initializes a runtime for the current buffer." },
             { "<leader>mo", "<cmd>MagmaEvaluateOperator<CR>", desc = "Evaluate the text given by some operator." },
@@ -198,6 +197,7 @@ local plugins = {
             },
         },
         config = function ()
+            vim.cmd[[UpdateRemotePlugins]]
             require('core.configs.magma-setup')
         end,
     },

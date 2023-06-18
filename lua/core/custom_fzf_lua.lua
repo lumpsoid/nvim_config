@@ -78,7 +78,7 @@ function M.insertHeadId()
       actions = {
         ['default'] = function(selected, opts)
             local cwd = vim.loop.cwd()
-            local file_md = string.match(selected[1], "[0-9]+%.md")
+            local file_md = string.match(selected[1], "[0-9]+%a*.md")
 
             local path_to_file = cwd .. "/" .. file_md
             local file = io.open(path_to_file, "r")
