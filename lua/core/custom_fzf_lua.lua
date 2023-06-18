@@ -1,7 +1,7 @@
 local M = {}
 
 function M.backlinks()
-    local note = require("custom_functions").currentNoteId()
+    local note = require("core.custom_functions").currentNoteId()
     require('fzf-lua').grep({
       search = note,
       fzf_cli_args = '--preview-window=~1',
@@ -21,7 +21,7 @@ function M.backlinks()
 end
 
 function M.findAroundNote()
-    local current_note = require("custom_functions").aroundNote()
+    local current_note = require("core.custom_functions").aroundNote()
     require('fzf-lua').files({
         cmd = "ls" .. " " .. current_note,
         fzf_cli_args = '--preview-window=~1',
@@ -87,7 +87,7 @@ function M.insertHeadId()
 
             local ztl_id = "[[" .. file_md:sub(1,14) .. "]]"
 
-            local output = require("custom_functions").cleanHeadline(header):lower() .. " " .. ztl_id
+            local output = require("core.custom_functions").cleanHeadline(header):lower() .. " " .. ztl_id
             vim.api.nvim_put({ output }, "", true, true)
           end
       }
