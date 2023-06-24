@@ -6,8 +6,10 @@ require("mason-null-ls").setup({
     automatic_installation = false,
     handlers = {},
 })
-require("null-ls").setup({
+local null_ls = require("null-ls")
+null_ls.setup({
     sources = {
         -- Anything not supported by mason.
+        null_ls.builtins.diagnostics.ltrs
     }
 })

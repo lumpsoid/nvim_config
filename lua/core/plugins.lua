@@ -76,7 +76,12 @@ local plugins = {
             require('core.configs.hop-setup')
         end
     },
-    { 'RRethy/nvim-base16' },
+    { 
+        'RRethy/nvim-base16',
+        config = function()
+            vim.cmd('colorscheme base16-decaf')
+        end
+    },
     {
         'ibhagwan/fzf-lua',
         -- optional for icon support
@@ -108,7 +113,18 @@ local plugins = {
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
     {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        opts = {} -- this is equalent to setup({}) function
+    },
+    {
         'hrsh7th/nvim-cmp',
+        dependencies = {
+            'windwp/nvim-autopairs',
+            'hrsh7th/cmp-nvim-lsp',
+            'L3MON4D3/LuaSnip',
+            'rafamadriz/friendly-snippets',
+        },
         config = function()
             require('core.configs.cmp-setup')
         end
@@ -139,10 +155,14 @@ local plugins = {
     {'jay-babu/mason-null-ls.nvim'},
     {
         'jose-elias-alvarez/null-ls.nvim',
+        ft = { "python", "markdown" },
         dependencies = {
             "nvim-lua/plenary.nvim",
             'jay-babu/mason-null-ls.nvim',
         },
+        config = function ()
+            require('core.configs.mason-null-ls')
+        end
     },
     --dap
     {
@@ -183,6 +203,7 @@ local plugins = {
         "WhiteBlackGoose/magma-nvim-goose",
         enabled = true,
         version = "*",
+        --run = 'UpdateRemotePlugins',
         keys = {
             { "<leader>mi", "<cmd>MagmaInit<CR>", desc = "This command initializes a runtime for the current buffer." },
             { "<leader>mo", "<cmd>MagmaEvaluateOperator<CR>", desc = "Evaluate the text given by some operator." },
@@ -197,7 +218,6 @@ local plugins = {
             },
         },
         config = function ()
-            vim.cmd[[UpdateRemotePlugins]]
             require('core.configs.magma-setup')
         end,
     },
