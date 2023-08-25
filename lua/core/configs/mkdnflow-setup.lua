@@ -13,7 +13,7 @@ require('mkdnflow').setup({
     mappings = {
         MkdnNextLink = false,
         MkdnPrevLink = false,
-        MkdnIncreaseHeading = {'n', '+'},
-        MkdnDecreaseHeading = {'n', '-'},
+        MkdnIncreaseHeading = false,
+        MkdnDecreaseHeading = false,
     }
 })

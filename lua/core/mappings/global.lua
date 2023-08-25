@@ -2,7 +2,7 @@ vim.keymap.set('n', '<Leader>set', ':tabnew $MYVIMRC<CR>', {desc = 'open MYVIMRC
 -- Mappings
 vim.keymap.set('n', '<c-s>', ':wa<cr>', {desc = 'Save file'})
 vim.keymap.set({'n', 'v'}, '<Leader>y', '"+y', {desc = 'Save to global clipboard'})
-vim.keymap.set('n', '<Leader>p', '"+p', {desc = 'Past from global clipboard'})
+vim.keymap.set({'n', 'v'}, '<Leader>p', '"+p', {desc = 'Past from global clipboard'})
 --tabs
 vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', {desc = 'new tab'})
 vim.keymap.set('n', '<leader>vs', ':vs<CR><c-w>w', {desc = 'open new split window and focus on it'})
@@ -14,8 +14,13 @@ vim.keymap.set('n', '<leader>fo', '<cmd>lua require("core.custom_fzf_lua").openF
 vim.keymap.set('n', '<leader>h', '<cmd>FzfLua oldfiles<CR>', {desc = 'open history pane'})
 vim.keymap.set('n', '<leader>bl', '<cmd>lua require("fzf-lua").blines()<CR>', {desc = 'поиск по открытым buffers'})
 --complition
-vim.keymap.set('n', '<leader>sn', '<cmd>lua require("luasnip").jump(1)<Cr>', {desc = 'next snippet placeholder'})
-vim.keymap.set('n', '<leader>sp', '<cmd>lua require("luasnip").jump(-1)<Cr>', {desc = 'previous snippet placeholder'})
+vim.keymap.set('n', '<leader>sn', '<cmd>lua require("luasnip").jump(1)<CR>', {desc = 'next snippet placeholder'})
+vim.keymap.set('n', '<leader>sp', '<cmd>lua require("luasnip").jump(-1)<CR>', {desc = 'previous snippet placeholder'})
+vim.keymap.set('n', '<leader>jo', '<cmd>Calendar<CR>', {desc = 'open todays daily note'})
+vim.keymap.set('n', '<leader>jt', '<cmd>lua require("core.custom_functions").openJournal()<CR>', {desc = 'open todays daily note'})
+vim.keymap.set('n', '<leader>jn', '<cmd>lua require("core.custom_functions").openJournalShift(1)<CR>', {desc = 'open todays daily note'})
+vim.keymap.set('n', '<leader>jp', '<cmd>lua require("core.custom_functions").openJournalShift(-1)<CR>', {desc = 'open todays daily note'})
+vim.keymap.set('n', '<leader>jl', '<cmd>lua require("core.custom_fzf_lua").journalList()<CR>', {desc = 'open todays daily note'})
 -- align_to_char(length, reverse, preview, marks)
 -- align_to_string(is_pattern, reverse, preview, marks)
 -- align(str, reverse, marks)

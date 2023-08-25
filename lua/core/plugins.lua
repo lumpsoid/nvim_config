@@ -14,6 +14,15 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
     'nvim-tree/nvim-web-devicons',
     {
+      "NeogitOrg/neogit",
+      dependencies = {
+        "nvim-lua/plenary.nvim",         -- required
+        --"nvim-telescope/telescope.nvim", -- optional
+        "sindrets/diffview.nvim",        -- optional
+      },
+      config = true
+    },
+    {
         'stevearc/oil.nvim',
         config = function()
             require('core.configs.oil-setup')
@@ -32,15 +41,22 @@ local plugins = {
         'lyokha/vim-xkbswitch',
         enabled = true,
         init = function ()
-            vim.g.XkbSwitchLib = '/home/qq/Applications/xkb-switch/build/libxkbswitch.so'
+            vim.g.XkbSwitchLib = '/home/qq/.config/xkb-switch/build/libxkbswitch.so'
             vim.g.XkbSwitchEnabled = 1
         end
     },
 
     -- вставка картинок в формате md
     -- use 'ferrine/md-img-paste.vim'
-    'ekickx/clipboard-image.nvim',
+    --'ekickx/clipboard-image.nvim',
 
+    {
+        'mattn/calendar-vim',
+        config = function ()
+            require('core.configs.calendar-setup')
+        end
+
+    },
     {
         'jakewvincent/mkdnflow.nvim',
         ft = { 'markdown' },
@@ -79,7 +95,9 @@ local plugins = {
     { 
         'RRethy/nvim-base16',
         config = function()
-            vim.cmd('colorscheme base16-decaf')
+            --vim.cmd('colorscheme base16-atelier-dune-light')
+            vim.cmd('colorscheme base16-ayu-mirage')
+            vim.cmd('colorscheme base16-framer')
         end
     },
     {
@@ -87,7 +105,8 @@ local plugins = {
         -- optional for icon support
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function ()
-           require('fzf-lua').setup({'skim'})
+            --require('fzf-lua').setup({'skim'})
+           require('fzf-lua').setup()
         end
     },
     {
@@ -146,6 +165,7 @@ local plugins = {
             'python',
             'rust',
             'lua',
+            'cpp',
         },
         config = function()
             require('core.configs.mason-lsp-setup')
@@ -200,10 +220,9 @@ local plugins = {
     },
     --repl
     {
-        "WhiteBlackGoose/magma-nvim-goose",
-        enabled = true,
+        "dccsillag/magma-nvim",
         version = "*",
-        --run = 'UpdateRemotePlugins',
+        --build = 'UpdateRemotePlugins',
         keys = {
             { "<leader>mi", "<cmd>MagmaInit<CR>", desc = "This command initializes a runtime for the current buffer." },
             { "<leader>mo", "<cmd>MagmaEvaluateOperator<CR>", desc = "Evaluate the text given by some operator." },

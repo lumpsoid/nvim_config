@@ -1,6 +1,7 @@
 require("mason").setup({
     ensure_installed = {
-        "debugpy"
+        "debugpy",
+        "clang-format"
     },
 })
 require("mason-lspconfig").setup {
@@ -12,6 +13,7 @@ require("mason-lspconfig").setup {
         "bashls",
         "cssls",
         "html",
+        "clangd",
     },
 }
 
@@ -60,6 +62,11 @@ require("lspconfig").pyright.setup {
     capabilitites = capabilities
 }
 require("lspconfig").rust_analyzer.setup {
+    on_attach = on_attach,
+    capabilitites = capabilities
+}
+
+require("lspconfig").clangd.setup {
     on_attach = on_attach,
     capabilitites = capabilities
 }
