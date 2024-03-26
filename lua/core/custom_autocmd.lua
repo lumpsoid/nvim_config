@@ -23,20 +23,25 @@ vim.api.nvim_create_autocmd("FileType", {
 --    { "BufLeave" },
 --    { pattern = { "*.md" }, command = "w" }
 --)
+--dotfiles stow
+vim.api.nvim_create_autocmd(
+    { "BufWritePost" },
+    { pattern = { "/home/qq/dotfiles/*" }, command = "!cd /home/qq/dotfiles; stow ." }
+)
 --dwmblocks
 vim.api.nvim_create_autocmd(
     { "BufWritePost" },
-    { pattern = { "/home/qq/Documents/dwmblocks/blocks.h" }, command = "!cd /home/qq/Documents/dwmblocks; pass sudo | sudo -S make install && { killall -q dwmblocks; setsid dwmblocks & }" }
+    { pattern = { "/home/qq/.config/dwmblocks/config.h" }, command = "!cd /home/qq/.config/dwmblocks; pass sudo | su -c 'make install && { killall -q dwmblocks; setsid dwmblocks & }'" }
 )
 --dwm
 vim.api.nvim_create_autocmd(
     { "BufWritePost" },
-    { pattern = { "/home/qq/.config/dwm/config.h" }, command = "!cd /home/qq/.config/dwm; pass sudo | sudo -S make install && sc-renewwm" }
+    { pattern = { "/home/qq/.config/dwm/config.h" }, command = "!cd /home/qq/.config/dwm; pass sudo | su -c 'make install && sc-renewwm'" }
 )
 --st terminal
 vim.api.nvim_create_autocmd(
     { "BufWritePost" },
-    { pattern = { "/home/qq/.config/st/config.h" }, command = "!cd /home/qq/.config/st; pass sudo | sudo -S make install" }
+    { pattern = { "/home/qq/.config/st/config.h" }, command = "!cd /home/qq/.config/st; pass sudo | su -c 'make install'" }
 )
 --vim.api.nvim_create_autocmd(
 --    { "BufNewFile", "BufRead", "BufEnter" },

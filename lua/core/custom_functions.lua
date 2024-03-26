@@ -185,5 +185,27 @@ function M.openJournalShift(shift)
     vim.api.nvim_command("edit " .. filepath)
 end
 
+function M.openJournalSameDay()
+    local path_to_file = vim.api.nvim_buf_get_name(0)
+    local currentFolder = vim.fn.fnamemodify(path_to_file, ":h")
+    local currentFile = vim.fn.fnamemodify(path_to_file, ":t:r")
+
+    local year = string.sub(currentFile, 1, 4)
+    local month = string.sub(currentFile, 5, 6)
+    local day = string.sub(currentFile, 7, 8)
+
+    local formattedFileName = ""
+    if year and month and day then
+        formattedFileName = string.format("%s_%s_%s.md", year, month, day)
+    else
+        print("Date pattern not found in the file name.")
+        return
+    end
+
+    local filepath = currentFolder .. "/" .. formattedFileName
+    vim.api.nvim_command("edit " .. filepath)
+  
+end
+
 return M
 

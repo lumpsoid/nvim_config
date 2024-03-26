@@ -1,12 +1,11 @@
 local M = {}
-
 function M.backlinks()
     local note = require("core.custom_functions").currentNoteId()
     require('fzf-lua').grep({
       search = note,
       fzf_cli_args = '--preview-window=~1',
       fzf_opts = {
-          ["--tiebreak"] = "begin",
+          ["--tiebreak"] = "length,begin",
       },
       previewer = 'bat',
       keymap = {
@@ -71,7 +70,7 @@ end
 
 function M.journalList()
     require('fzf-lua').files({
-        cmd = "rg --files -g *_*_*.md",
+        cmd = "rg --files -g *_*_*.md | sort --reverse",
         --cmd = "rg --files | rg '[0-9]*_[0-9]*_[0-9]*.md' | sort --reverse",
         --cmd = 'rg [0-9]*_[0-9]*_[0-9]*.md',
         fzf_cli_args = '--preview-window=~1',
@@ -93,7 +92,7 @@ function M.insertHeadId()
       search = '',
       fzf_cli_args = '--preview-window=~1',
       fzf_opts = {
-          ["--tiebreak"] = "begin,length",
+          ["--tiebreak"] = "length,begin",
       },
       previewer = 'bat',
       keymap = {
@@ -131,7 +130,7 @@ function M.insertId()
       search = '',
       fzf_cli_args = '--preview-window=~1',
       fzf_opts = {
-            ["--tiebreak"] = "begin,length",
+            ["--tiebreak"] = "length,begin",
        },
       previewer = 'bat',
       keymap = {
@@ -161,7 +160,7 @@ function M.openFile()
         search = '',
         fzf_cli_args = '--preview-window=~1',
         fzf_opts = {
-            ["--tiebreak"] = "begin,length",
+            ["--tiebreak"] = "length,begin",
         },
         previewer = 'bat',
         keymap = {
