@@ -1,0 +1,7 @@
+return {
+  'RRethy/nvim-base16',
+  config = function()
+    --vim.cmd('colorscheme base16-atelier-dune-light')
+    --vim.cmd('colorscheme base16-framer')
+  end
+}
