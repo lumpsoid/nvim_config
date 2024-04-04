@@ -118,8 +118,9 @@ function M.insertHeadId()
 
             local ztl_id = "[[" .. file_md:sub(1,-4) .. "]]"
 
-            local output = require("core.custom_functions").cleanHeadline(header):lower() .. " " .. ztl_id
-            vim.api.nvim_put({ output }, "", true, true)
+            local output = ztl_id .. " " .. require("core.custom_functions").cleanHeadline(header):lower()
+            require("core.custom_functions").textinsert(output)
+            ---vim.api.nvim_put({ output }, "", true, true)
           end
       }
     })
@@ -149,7 +150,8 @@ function M.insertId()
             --local file_md = string.match(selected[1], "[0-9]+%.md")
             local file_md = string.match(selected[1], "[0-9].*%.md")
             local ztl_id = "[[" .. file_md:sub(1,-4) .. "]]"
-            vim.api.nvim_put({ ztl_id }, "", true, true)
+            require("core.custom_functions").textinsert(ztl_id)
+            --vim.api.nvim_put({ ztl_id }, "", true, true)
           end
       }
     })
