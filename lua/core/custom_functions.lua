@@ -49,6 +49,10 @@ end
 
 function M.writefile(path, text)
   local filewrite = io.open(path, "w")
+  if filewrite == nil then
+    print(string.format('%s path is nil', path))
+    return
+  end
   filewrite:write(text)
   filewrite:close()
 end
@@ -109,28 +113,34 @@ end
 
 local note_template = "\n#N\n- \n- "
 
+function M.pathToCurrentFolder()
+  return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+end
+
+function M.createFilePath(fileName)
+  local system = jit.os
+  local currentFolder = M.pathToCurrentFolder()
+  if system == "Windows" then
+    return currentFolder .. '\\' .. fileName
+  elseif system == "Linux" then
+    return currentFolder .. '/' .. fileName
+  end
+end
+
 function M.createID()
-  local main_note = M.currentLink()
-  local ztl = M.ztltime()
-  local pos = vim.api.nvim_win_get_cursor(0)
-  local currentLine = vim.api.nvim_get_current_line()
-  -- dynamicly take current folder to create note in it
-  local current_folder = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-  local file_path = current_folder .. '/' .. ztl .. ".md"
-
-  -- write template to the new file
-  local new_header = M.cleanline(currentLine)
-  local text = '# ' .. new_header .. note_template .. main_note
-  M.writefile(file_path, text)
-
-  -- write link to the line
-  local linePrefix, lineText = string.match(currentLine, "^(%s*-%s)(.*)$")
-  local newLine = linePrefix .. M.linkwrap(ztl) .. " " .. lineText
-  vim.api.nvim_set_current_line(newLine)
-
-  local prefixLength = string.len(linePrefix)
-  vim.api.nvim_win_set_cursor(0, { pos[1], prefixLength + 2 })
-  mkdn.links.followLink()
+    local main_note = M.currentLink()
+    local ztl = M.ztltime()
+    -- dynamicly take current folder to create note in it
+    local file_path = M.createFilePath(ztl .. ".md")
+    local new_header = vim.api.nvim_get_current_line()
+    new_header = M.cleanline(new_header)
+    local text = '# ' .. new_header .. note_template .. '\n- ' .. main_note
+    -- можно использовать для этого nvim.api.nvim_put()
+    M.writefile(file_path, text)
+    M.textinsert(M.linkwrap(ztl))
+    local pos = vim.api.nvim_win_get_cursor(0)
+    vim.api.nvim_win_set_cursor(0, {pos[1],pos[2]+1})
+    mkdn.links.followLink()
 end
 
 function M.fileExists(filename)
@@ -162,14 +172,13 @@ function M.dateData(shift)
 end
 
 function M.openJournal(shift)
-  -- default value of shift
-  shift = shift or 0
-  -- vault folder
-  local dir = vim.g.calendar_diary
-  local date = M.dateData(shift)
-  local formattedFileName = string.format("%d_%02d_%02d.md", date.year, date.month, date.day)
-  local formattedHeader = string.format("%d %02d %02d %s", date.year, date.month, date.day, date.weekDay)
-  local filepath = dir .. "/" .. formattedFileName
+    -- default value of shift
+    shift = shift or 0
+    -- vault folder
+    local date = M.dateData(shift)
+    local formattedFileName = string.format("%d_%02d_%02d.md", date.year, date.month, date.day)
+    local formattedHeader = string.format("%d %02d %02d %s", date.year, date.month, date.day, date.weekDay)
+    local filepath = M.createFilePath(formattedFileName)
 
   if not M.fileExists(filepath) then
     local fileTemplate = "# " .. formattedHeader .. "\n#daily\n- "
@@ -196,10 +205,9 @@ function M.openJournalShift(shift)
   local previousDate = os.date("*t", os.time({ year = year, month = month, day = day }))
   local dayOfWeek = daysOfWeek[previousDate.wday]
 
-  local formattedFileName = string.format("%d_%02d_%02d.md", previousDate.year, previousDate.month, previousDate.day)
-  local formattedHeader = string.format("%d %02d %02d %s", previousDate.year, previousDate.month, previousDate.day,
-    dayOfWeek)
-  local filepath = currentFolder .. "/" .. formattedFileName
+    local formattedFileName = string.format("%d_%02d_%02d.md", previousDate.year, previousDate.month, previousDate.day)
+    local formattedHeader = string.format("%d %02d %02d %s", previousDate.year, previousDate.month, previousDate.day, dayOfWeek)
+    local filepath = M.createFilePath(formattedFileName)
 
   if not M.fileExists(filepath) then
     local fileTemplate = "# " .. formattedHeader .. "\n#daily\n- "
@@ -210,9 +218,8 @@ function M.openJournalShift(shift)
 end
 
 function M.openJournalSameDay()
-  local path_to_file = vim.api.nvim_buf_get_name(0)
-  local currentFolder = vim.fn.fnamemodify(path_to_file, ":h")
-  local currentFile = vim.fn.fnamemodify(path_to_file, ":t:r")
+    local path_to_file = vim.api.nvim_buf_get_name(0)
+    local currentFile = vim.fn.fnamemodify(path_to_file, ":t:r")
 
   local year = string.sub(currentFile, 1, 4)
   local month = string.sub(currentFile, 5, 6)
@@ -226,8 +233,9 @@ function M.openJournalSameDay()
     return
   end
 
-  local filepath = currentFolder .. "/" .. formattedFileName
-  vim.api.nvim_command("edit " .. filepath)
+    local filepath = M.createFilePath(formattedFileName)
+    vim.api.nvim_command("edit " .. filepath)
+  
 end
 
 return M
