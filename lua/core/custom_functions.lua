@@ -130,16 +130,23 @@ end
 function M.createID()
     local main_note = M.currentLink()
     local ztl = M.ztltime()
+    local pos = vim.api.nvim_win_get_cursor(0)
+    local currentLine = vim.api.nvim_get_current_line()
     -- dynamicly take current folder to create note in it
     local file_path = M.createFilePath(ztl .. ".md")
     local new_header = vim.api.nvim_get_current_line()
-    new_header = M.cleanline(new_header)
-    local text = '# ' .. new_header .. note_template .. '\n- ' .. main_note
+    new_header = M.cleanline(currentLine)
+    local text = '# ' .. new_header .. note_template .. main_note
     -- можно использовать для этого nvim.api.nvim_put()
     M.writefile(file_path, text)
-    M.textinsert(M.linkwrap(ztl))
-    local pos = vim.api.nvim_win_get_cursor(0)
-    vim.api.nvim_win_set_cursor(0, {pos[1],pos[2]+1})
+
+    -- write link to the line
+    local linePrefix, lineText = string.match(currentLine, "^(%s*-%s)(.*)$")
+    local newLine = linePrefix .. M.linkwrap(ztl) .. " " .. lineText
+    vim.api.nvim_set_current_line(newLine)
+
+    local prefixLength = string.len(linePrefix)
+    vim.api.nvim_win_set_cursor(0, { pos[1], prefixLength + 2 })
     mkdn.links.followLink()
 end
 
