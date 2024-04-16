@@ -48,7 +48,7 @@ end
 function M.listOfNotes()
     require('fzf-lua').files({
         --cmd = "rg --files -g *.md --sortr=path",
-        cmd = "rg --files -g *.md",
+        cmd = "rg --files -g *.md | sort --reverse",
         fzf_cli_args = '--preview-window=~1',
         fzf_opts = {
             ["--tiebreak"] = "begin",
@@ -88,7 +88,7 @@ function M.journalList()
 end
 
 function M.insertHeadId()
-    require('fzf-lua').grep({
+    require('fzf-lua').live_grep({
       search = '',
       fzf_cli_args = '--preview-window=~1',
       fzf_opts = {
@@ -127,7 +127,7 @@ function M.insertHeadId()
 end
 
 function M.insertId()
-    require('fzf-lua').grep({
+    require('fzf-lua').live_grep({
       search = '',
       fzf_cli_args = '--preview-window=~1',
       fzf_opts = {
