@@ -12,10 +12,12 @@ vim.keymap.set('n', 'i', 'zzi', {desc = 'center screen when entering insert mode
 
 vim.keymap.set('n', '<leader>fo', '<cmd>lua require("core.functions_fzf_lua").openFile()<CR>', {desc = 'find and open note through telescope'})
 vim.keymap.set('n', '<leader>h', '<cmd>FzfLua oldfiles<CR>', {desc = 'open history pane'})
+vim.keymap.set('n', '<leader>sb', '<cmd>FzfLua buffers<CR>', {desc = 'open buffers pane'})
 vim.keymap.set('n', '<leader>bl', '<cmd>lua require("fzf-lua").blines()<CR>', {desc = 'поиск по открытым buffers'})
 --complition
 vim.keymap.set('n', '<leader>sn', '<cmd>lua require("luasnip").jump(1)<CR>', {desc = 'next snippet placeholder'})
 vim.keymap.set('n', '<leader>sp', '<cmd>lua require("luasnip").jump(-1)<CR>', {desc = 'previous snippet placeholder'})
+vim.keymap.set('n', '<leader>sf', require('fzf-lua').files, {desc = 'fzf search filenames'})
 --calendar/journal
 vim.keymap.set('n', '<leader>jo', '<cmd>Calendar<CR>', {desc = 'open calendar'})
 vim.keymap.set('n', '<leader>jt', '<cmd>lua require("core.custom_functions").openJournal()<CR>', {desc = 'open todays daily note'})

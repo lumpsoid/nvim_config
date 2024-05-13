@@ -21,8 +21,7 @@ function M.hint_wikilink_follow(pattern)
     hint_offset = 0
   }
 
-  local generator
-  generator = jump_target.jump_targets_by_scanning_lines
+  local generator = jump_target.jump_targets_by_scanning_lines
 
   hop.hint_with_callback(
     generator(jump_target.regex_by_case_searching(pattern, false, opts)),

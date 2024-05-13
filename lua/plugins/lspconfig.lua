@@ -21,6 +21,8 @@ return {
       'markdown',
       'bash',
       'sh',
+      'go',
+      'dart',
     },
     config = function()
       require("mason").setup({ ensure_installed = { "debugpy", "clang-format" }, })
@@ -35,6 +37,7 @@ return {
           "html",
           "clangd",
           "tsserver",
+          "gopls",
         },
       }
 
@@ -52,6 +55,7 @@ return {
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
         vim.keymap.set('n', 'gD', require('fzf-lua').lsp_declarations, bufopts)
         vim.keymap.set('n', 'gs', require('fzf-lua').lsp_document_symbols, bufopts)
+        vim.keymap.set('n', '<leader>gs', require('fzf-lua').lsp_live_workspace_symbols, bufopts)
         vim.keymap.set('n', 'gd', require('fzf-lua').lsp_definitions, bufopts)
         vim.keymap.set("n", "gr", require('fzf-lua').lsp_references, bufopts)
         vim.keymap.set('n', 'gi', require('fzf-lua').lsp_implementations, bufopts)
@@ -64,9 +68,9 @@ return {
         vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
         --vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-        --vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-        vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+        vim.keymap.set('n', '<leader>fc', function() vim.lsp.buf.format { async = true } end, bufopts)
         vim.keymap.set("n", "<leader>ca", require('fzf-lua').lsp_code_actions, bufopts)
+        vim.keymap.set("n", "<leader>cf", vim.lsp.buf.format, bufopts)
       end
 
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -94,12 +98,20 @@ return {
         on_attach = on_attach,
         capabilitites = capabilities
       }
+      require("lspconfig").gopls.setup {
+        on_attach = on_attach,
+        capabilitites = capabilities
+      }
+      require("lspconfig").dartls.setup {
+        on_attach = on_attach,
+        capabilitites = capabilities
+      }
     end
   },
   --linting
   { 'jay-babu/mason-null-ls.nvim' },
   {
-    'jose-elias-alvarez/null-ls.nvim',
+    'nvimtools/none-ls.nvim',
     ft = { "python", "markdown" },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -196,4 +208,58 @@ return {
       --nnoremap <silent> <LocalLeader>rq :noautocmd MagmaEnterOutput<CR>
     end,
   },
+  {
+    "akinsho/flutter-tools.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim"
+    },
+    config = function()
+      require('flutter-tools').setup {
+        -- (uncomment below line for windows only)
+        -- flutter_path = "home/flutter/bin/flutter.bat",
+
+        debugger = {
+          -- make these two params true to enable debug mode
+          enabled = true,
+          run_via_dap = true,
+          register_configurations = function(_)
+            require("dap").adapters.dart = {
+              type = "executable",
+              command = vim.fn.stdpath("data") .. "/mason/bin/dart-debug-adapter",
+              args = { "flutter" }
+            }
+
+            require("dap").configurations.dart = {
+              {
+                type = "dart",
+                request = "launch",
+                name = "Launch flutter",
+                dartSdkPath = '/home/qq/Documents/programming/flutter/flutter/bin',
+                flutterSdkPath = "/home/qq/Documents/programming/flutter/flutter/bin",
+                program = "${workspaceFolder}/lib/main.dart",
+                cwd = "${workspaceFolder}",
+              }
+            }
+            -- uncomment below line if you've launch.json file already in your vscode setup
+            -- require("dap.ext.vscode").load_launchjs()
+          end,
+        },
+        dev_log = {
+          -- toggle it when you run without DAP
+          enabled = false,
+          open_cmd = "tabedit",
+        },
+        lsp = {
+          on_attach = require("null-ls").common_on_attach,
+          capabilities = require("null-ls").default_capabilities,
+        },
+
+      }
+    end
+  },
+  -- for dart syntax hightling
+  --{
+  --  "dart-lang/dart-vim-plugin"
+  --},
 }

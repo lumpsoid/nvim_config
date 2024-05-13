@@ -16,4 +16,3 @@ require("lazy").setup("plugins")
 require('core.mappings.global')
 require('core.custom_autocmd')
 require('core.custom_functions')
-
