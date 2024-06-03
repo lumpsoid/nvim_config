@@ -114,12 +114,15 @@ function M.insertHeadId()
       }
     },
     actions = {
-      ['default'] = function(selected, opts)
+      ['default'] = function(selected, _) -- _ = opts
         local cwd = vim.loop.cwd()
         local file_md = string.match(selected[1], "[0-9].*%.md")
 
         local path_to_file = cwd .. "/" .. file_md
         local file = io.open(path_to_file, "r")
+        if file == nil then
+          return
+        end
         local header = file:read()
         file:close()
 
@@ -177,6 +180,35 @@ function M.openFile()
         ["shift-down"] = "preview-half-page-down",
         ["shift-up"] = "preview-half-page-up",
       }
+    },
+  })
+end
+
+function M.insertTag()
+  require('fzf-lua').fzf_exec("cat .tags_index",{
+    fzf_opts = {
+      ["--tiebreak"] = "length,begin",
+      ["--multi"]     = true,
+    },
+    keymap = {
+      fzf = {
+        ["ctrl-x"] = "clear-query",
+      },
+    },
+    actions = {
+      ['default'] = function(selected)
+        if next(selected) == nil then
+          print("Nothing was selected")
+          return
+        end
+        local text = {}
+        for _, tag in ipairs(selected) do
+          local tagString = string.match(tag, "#.*")
+          table.insert(text, tagString)
+        end
+        local textString = table.concat(text, " ")
+        vim.api.nvim_put({ textString }, "", true, true)
+      end,
     },
   })
 end

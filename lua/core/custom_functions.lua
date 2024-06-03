@@ -272,38 +272,71 @@ end
 ---@return string|nil
 function M.getLine(filename, line_number)
   if M.fileExists(filename) then
-    local i = 0
-    for line in io.lines(filename) do
-      i = i + 1
-      if i == line_number then
-        return line
-      end
+    local line
+    local n = line_number
+    local f = io.open(filename, "r")
+    if f == nil then
+      return nil
     end
+    for _ = 1, n do
+      line = f:read()
+    end
+    f:close()
+    return line
   end
   return nil -- line not found
 end
 
 
 function M.isTagLine(line)
-  if line[1] == "#" then
+  local firstSimbol = string.sub(line, 1, 1)
+  if firstSimbol == "#" then
     return true
   end
   return false
 end
 
-function M.indexTags()
-  local tags = {}
+function M.collectTags()
+  local uniqueSet = {}
+  local uniqueTags = {}
+
+  table.insert(uniqueTags, os.time())
+
   local dirFiles = M.getFiles()
   for _, filePath in pairs(dirFiles) do
     local tagLine = M.getLine(filePath, 2)
     if tagLine ~= nil and M.isTagLine(tagLine) then
       for word in tagLine:gmatch("%S+") do
-        print(word)
-        --table.insert(tags, word)
+        if not uniqueSet[word] then
+          table.insert(uniqueTags, word)
+          uniqueSet[word] = true
+        end
       end
     end
   end
-  print(vim.inspect(tags))
+  return uniqueTags
+end
+
+function M.indexTags()
+  local filename = "./.tags_index"
+  local cacheTime = nil
+  if M.fileExists(filename) then
+    local f = io.open(filename)
+    if f ~= nil then
+      cacheTime = f:read()
+      if cacheTime ~= nil then
+        local currentTime = os.time()
+        local difTime = os.difftime(currentTime, cacheTime)
+        if difTime / 60 <= 5 then
+          return
+        end
+      end
+      f:close()
+    end
+  end
+  local tags = M.collectTags()
+  local tagString = table.concat(tags, "\n")
+  M.writeFile(filename, tagString)
 end
 
 return M

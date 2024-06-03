@@ -1,30 +1,60 @@
-vim.keymap.set('n', '<leader>set', ':tabnew $MYVIMRC<CR>', {desc = 'open MYVIMRC'})
+MapReg = function(opts)
+  return function(mappings)
+    return require('which-key').register(mappings, opts)
+  end
+end
+
+MapLeaderNormal = MapReg({ mode = 'n', prefix = '<leader>' })
+MapCtrlNormal = MapReg({ mode = 'n', prefix = 'ctrl' })
+MapLeaderVisual = MapReg({ mode = 'v', prefix = '<leader>' })
+
+MapLeaderNormal({
+  s = {
+    e = {
+      t = { ":tabnew $MYVIMRC<CR>", "open VIMRC" },
+    },
+    v = { ':vs<CR><c-w>w', 'Vertical split, and focus on it' },
+    h = { ':sp<CR>', 'Horizontal split' },
+    n = { '<cmd>lua require("luasnip").jump(1)<CR>', 'next snippet placeholder' },
+    p = { '<cmd>lua require("luasnip").jump(-1)<CR>', 'previous snippet placeholder' },
+    f = { require('fzf-lua').files, 'fzf search filenames' },
+    b = { require('fzf-lua').buffers, 'fzf search buffers' },
+  },
+  y = { '"+y', 'Yank to clipboard' },
+  p = { '"+p', 'Paste from clipboard' },
+  t = {
+    n = { ':tabnew<CR>', 'New tab' },
+    c = { ':tabclose<CR>', 'Close tab' },
+    l = { ':tabnext<CR>', 'Next tab' },
+    h = { ':tabprevious<CR>', 'Previous tab' },
+    i = {
+      '<cmd>lua require("core.functions_fzf_lua").insertTag()<CR>',
+      'Tags autocomplition with fzf'
+    },
+  },
+  h = { '<cmd>FzfLua oldfiles<CR>', 'open history pane' },
+  j = {
+    o = { '<cmd>Calendar<CR>', 'open calendar' },
+    t = { '<cmd>lua require("core.custom_functions").openJournal()<CR>', 'open todays daily note' },
+    n = { '<cmd>lua require("core.custom_functions").openJournalShift(1)<CR>', 'open next daily note' },
+    p = { '<cmd>lua require("core.custom_functions").openJournalShift(-1)<CR>', 'open previous daily note' },
+    s = { '<cmd>lua require("core.custom_functions").openJournalSameDay()<CR>', 'open journal note for the same date' },
+    l = { '<cmd>lua require("core.functions_fzf_lua").journalList()<CR>', 'open list of all journals' },
+  },
+})
+
+MapLeaderVisual({
+  y = {'"+y', 'copy to clipboard'},
+})
 -- Mappings
 vim.keymap.set('n', '<c-s>', ':wa<cr>', {desc = 'Save file'})
-vim.keymap.set({'n', 'v'}, '<leader>y', '"+y', {desc = 'Save to global clipboard'})
-vim.keymap.set({'n', 'v'}, '<leader>p', '"+p', {desc = 'Past from global clipboard'})
---tabs
-vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', {desc = 'new tab'})
-vim.keymap.set('n', '<leader>vs', ':vs<CR><c-w>w', {desc = 'open new split window and focus on it'})
-vim.keymap.set('n', '<leader>tc', ':clo<CR>', {desc = 'close current tab'})
 --something
 vim.keymap.set('n', 'i', 'zzi', {desc = 'center screen when entering insert mode'})
 
 vim.keymap.set('n', '<leader>fo', '<cmd>lua require("core.functions_fzf_lua").openFile()<CR>', {desc = 'find and open note through telescope'})
-vim.keymap.set('n', '<leader>h', '<cmd>FzfLua oldfiles<CR>', {desc = 'open history pane'})
-vim.keymap.set('n', '<leader>sb', '<cmd>FzfLua buffers<CR>', {desc = 'open buffers pane'})
 vim.keymap.set('n', '<leader>bl', '<cmd>lua require("fzf-lua").blines()<CR>', {desc = 'поиск по открытым buffers'})
 --complition
-vim.keymap.set('n', '<leader>sn', '<cmd>lua require("luasnip").jump(1)<CR>', {desc = 'next snippet placeholder'})
-vim.keymap.set('n', '<leader>sp', '<cmd>lua require("luasnip").jump(-1)<CR>', {desc = 'previous snippet placeholder'})
-vim.keymap.set('n', '<leader>sf', require('fzf-lua').files, {desc = 'fzf search filenames'})
 --calendar/journal
-vim.keymap.set('n', '<leader>jo', '<cmd>Calendar<CR>', {desc = 'open calendar'})
-vim.keymap.set('n', '<leader>jt', '<cmd>lua require("core.custom_functions").openJournal()<CR>', {desc = 'open todays daily note'})
-vim.keymap.set('n', '<leader>jn', '<cmd>lua require("core.custom_functions").openJournalShift(1)<CR>', {desc = 'open next daily note'})
-vim.keymap.set('n', '<leader>jp', '<cmd>lua require("core.custom_functions").openJournalShift(-1)<CR>', {desc = 'open previous daily note'})
-vim.keymap.set('n', '<leader>js', '<cmd>lua require("core.custom_functions").openJournalSameDay()<CR>', {desc = 'open journal note for the same date'})
-vim.keymap.set('n', '<leader>jl', '<cmd>lua require("core.functions_fzf_lua").journalList()<CR>', {desc = 'open list of all journals'})
 -- align_to_char(length, reverse, preview, marks)
 -- align_to_string(is_pattern, reverse, preview, marks)
 -- align(str, reverse, marks)

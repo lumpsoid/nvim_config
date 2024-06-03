@@ -2,7 +2,7 @@ return {
   'ibhagwan/fzf-lua',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function ()
-    require('fzf-lua').setup({'skim'})
-    --require('fzf-lua').setup()
+    --require('fzf-lua').setup({'skim'})
+    require('fzf-lua').setup()
   end
 }
