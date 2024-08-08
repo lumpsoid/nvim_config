@@ -9,6 +9,7 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      'nvimtools/none-ls.nvim',
     },
     ft = {
       'python',
@@ -18,14 +19,21 @@ return {
       'javascript',
       'html',
       'css',
+      'sql',
       'markdown',
       'bash',
       'sh',
       'go',
-      'dart',
+      'kotlin',
     },
     config = function()
-      require("mason").setup({ ensure_installed = { "debugpy", "clang-format" }, })
+      require("mason").setup({
+        ensure_installed = {
+          "debugpy",
+          "clang-format",
+          "dart-debug-adapter",
+        },
+      })
       require("mason-lspconfig").setup {
         ensure_installed = {
           "lua_ls",
@@ -38,6 +46,9 @@ return {
           "clangd",
           "tsserver",
           "gopls",
+          "kotlin_language_server",
+          "prettier",
+          --"ast_grep",
         },
       }
 
@@ -46,6 +57,17 @@ return {
       vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
       vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
       vim.keymap.set('n', '<space>q', require('fzf-lua').lsp_document_diagnostics, opts)
+
+      local lsp_formatting = function(bufnr)
+        vim.lsp.buf.format({
+          async = true,
+          --filter = function(client)
+          --  -- apply whatever logic you want (in this example, we'll only use null-ls)
+          --  return client.name == "null-ls"
+          --end,
+          bufnr = bufnr,
+        })
+      end
 
       local on_attach = function(client, bufnr)
         -- Enable completion triggered by <c-x><c-o>
@@ -68,8 +90,8 @@ return {
         vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
         --vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-        vim.keymap.set('n', '<leader>fc', function() vim.lsp.buf.format { async = true } end, bufopts)
-        vim.keymap.set("n", "<leader>ca", require('fzf-lua').lsp_code_actions, bufopts)
+        vim.keymap.set('n', '<leader>l', lsp_formatting, bufopts)
+        vim.keymap.set("n", "<leader>ac", require('fzf-lua').lsp_code_actions, bufopts)
         vim.keymap.set("n", "<leader>cf", vim.lsp.buf.format, bufopts)
       end
 
@@ -80,7 +102,26 @@ return {
       }
       require("lspconfig").pyright.setup {
         on_attach = on_attach,
-        capabilitites = capabilities
+        capabilitites = capabilities,
+        settings = {
+          pyright = {
+            disableOrganizeImports = true,
+            disableLanguageServices = true,
+          },
+          python = {
+            analysis = {
+              ignore = { '*' },
+            },
+          },
+        },
+      }
+      require("lspconfig").ruff.setup {
+        trace = 'messages',
+        init_options = {
+          settings = {
+            logLevel = 'debug',
+          }
+        }
       }
       require("lspconfig").rust_analyzer.setup {
         on_attach = on_attach,
@@ -102,7 +143,11 @@ return {
         on_attach = on_attach,
         capabilitites = capabilities
       }
-      require("lspconfig").dartls.setup {
+      require("lspconfig").gopls.setup {
+        on_attach = on_attach,
+        capabilitites = capabilities
+      }
+      require("lspconfig").kotlin_language_server.setup {
         on_attach = on_attach,
         capabilitites = capabilities
       }
@@ -122,6 +167,7 @@ return {
         ensure_installed = {
           -- Opt to list sources here, when available in mason.
           'ltrs',
+          'ktlint',
         },
         automatic_installation = false,
         handlers = {},
@@ -133,6 +179,9 @@ return {
           --null_ls.builtins.diagnostics.ltrs,
           null_ls.builtins.formatting.clang_format,
           null_ls.builtins.diagnostics.ltrs,
+          null_ls.builtins.diagnostics.ktlint,
+          null_ls.builtins.formatting.prettier,
+
         }
       })
     end
@@ -145,6 +194,9 @@ return {
   {
     'rcarriga/nvim-dap-ui',
     lazy = true,
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+    },
     config = function()
       local dap = require("dap")
       local dapui = require("dapui")
@@ -152,12 +204,21 @@ return {
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
+      --dap.listeners.before.event_terminated["dapui_config"] = function()
+      --  dapui.close()
+      --end
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
       end
+      local wk = require("which-key")
+      wk.add({
+        {
+          group = "dap",
+          mode = "n",
+          { "<leader>do", "<cmd>lua require('dapui').open()<CR>",   desc = "Open dap ui" },
+          { "<leader>dt", "<cmd>lua require('dapui').toggle()<CR>", desc = "Toggle dap ui" },
+        },
+      })
     end,
   },
   {
@@ -208,21 +269,40 @@ return {
       --nnoremap <silent> <LocalLeader>rq :noautocmd MagmaEnterOutput<CR>
     end,
   },
+
   {
     "akinsho/flutter-tools.nvim",
+    ft = 'dart',
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "stevearc/dressing.nvim"
+      'mfussenegger/nvim-dap',
+      --"stevearc/dressing.nvim",
+      'rcarriga/nvim-dap-ui',
     },
     config = function()
+      local opts = { noremap = true, silent = true }
+      vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+      vim.keymap.set('n', '<space>q', require('fzf-lua').lsp_document_diagnostics, opts)
+
+      local wk = require("which-key")
+      wk.add({
+        {
+          group = "flutter",
+          mode = "n",
+          { "<leader>dd", "<cmd>:FlutterDevices<CR>", desc = "Start project on selected device" },
+        },
+      })
+
       require('flutter-tools').setup {
         -- (uncomment below line for windows only)
         -- flutter_path = "home/flutter/bin/flutter.bat",
 
         debugger = {
           -- make these two params true to enable debug mode
-          enabled = true,
-          run_via_dap = true,
+          enabled = false,
+          run_via_dap = false,
           register_configurations = function(_)
             require("dap").adapters.dart = {
               type = "executable",
@@ -237,22 +317,46 @@ return {
                 name = "Launch flutter",
                 dartSdkPath = '/home/qq/Documents/programming/flutter/flutter/bin',
                 flutterSdkPath = "/home/qq/Documents/programming/flutter/flutter/bin",
-                program = "${workspaceFolder}/lib/main.dart",
+                program = "${workspaceFolder}/lib/main_development.dart",
                 cwd = "${workspaceFolder}",
               }
             }
             -- uncomment below line if you've launch.json file already in your vscode setup
-            -- require("dap.ext.vscode").load_launchjs()
+            require("dap.ext.vscode").load_launchjs()
           end,
         },
         dev_log = {
           -- toggle it when you run without DAP
-          enabled = false,
+          enabled = true,
           open_cmd = "tabedit",
         },
         lsp = {
-          on_attach = require("null-ls").common_on_attach,
-          capabilities = require("null-ls").default_capabilities,
+          on_attach = function(_, bufnr)
+            -- Enable completion triggered by <c-x><c-o>
+            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+            local bufopts = { noremap = true, silent = true, buffer = bufnr }
+            vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+            vim.keymap.set('n', 'gD', require('fzf-lua').lsp_declarations, bufopts)
+            vim.keymap.set('n', 'gs', require('fzf-lua').lsp_document_symbols, bufopts)
+            vim.keymap.set('n', '<leader>gs', require('fzf-lua').lsp_live_workspace_symbols, bufopts)
+            vim.keymap.set('n', 'gd', require('fzf-lua').lsp_definitions, bufopts)
+            vim.keymap.set("n", "gr", require('fzf-lua').lsp_references, bufopts)
+            vim.keymap.set('n', 'gi', require('fzf-lua').lsp_implementations, bufopts)
+            vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+            vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+            vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+            vim.keymap.set('n', '<leader>wl', function()
+              print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+            end, bufopts)
+            vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+            vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+            --vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+            vim.keymap.set('n', '<leader>fc', function() vim.lsp.buf.format { async = true } end, bufopts)
+            vim.keymap.set("n", "<leader>ac", require('fzf-lua').lsp_code_actions, bufopts)
+            vim.keymap.set("n", "<leader>cf", vim.lsp.buf.format, bufopts)
+          end,
+          capabilities = require('cmp_nvim_lsp').default_capabilities(),
         },
 
       }
