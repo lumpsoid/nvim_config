@@ -168,7 +168,8 @@ function M.insertId()
 end
 
 function M.openFile()
-  require('fzf-lua').live_grep({
+  -- live_grep to start with rg not fuzzy search
+  require('fzf-lua').grep({
     search = '',
     fzf_cli_args = '--preview-window=~1',
     fzf_opts = {
