@@ -1,0 +1,91 @@
+return {
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    opts = {
+      flavour = "latte", -- or "macchiato", "frappe", "latte"
+      background = {
+        light = "latte",
+        dark = "mocha",
+      },
+      transparent_background = false,
+      show_end_of_buffer = false,
+      term_colors = true,
+      dim_inactive = {
+        enabled = true, -- dims inactive windows
+        shade = "dark",
+        percentage = 0.15,
+      },
+      no_italic = false,
+      no_bold = false,
+      no_underline = false,
+      styles = {
+        comments = { "italic" },
+        conditionals = { "bold" },
+        loops = { "bold" },
+        functions = { "bold" },
+        keywords = { "italic", "bold" },
+        strings = { "italic" },
+        variables = {},
+        numbers = { "bold" },
+        booleans = { "bold", "italic" },
+        properties = {},
+        types = { "bold" },
+        operators = { "bold" },
+      },
+      color_overrides = {
+        mocha = {
+          -- Make background slightly darker for better contrast
+          base = "#0f0f0f",
+          mantle = "#0a0a0a",
+          crust = "#050505",
+        },
+      },
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+          enabled = true,
+          indentscope_color = "",
+        },
+        native_lsp = {
+          enabled = true,
+          virtual_text = {
+            errors = { "italic" },
+            hints = { "italic" },
+            warnings = { "italic" },
+            information = { "italic" },
+          },
+          underlines = {
+            errors = { "underline" },
+            hints = { "underline" },
+            warnings = { "underline" },
+            information = { "underline" },
+          },
+          inlay_hints = {
+            background = true,
+          },
+        },
+        hop = true,
+        indent_blankline = {
+          enabled = true,
+          scope_color = "sapphire",
+          colored_indent_levels = false,
+        },
+        telescope = true,
+        fzf = true,
+        flash = true,
+        lsp_trouble = true,
+        which_key = true,
+      },
+    },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+    end,
+  },
+}

@@ -1,18 +1,14 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+-- Set leader key before loading plugins
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
-require('core.options')
-require("lazy").setup("plugins")
-require('core.mappings.global')
-require('core.custom_autocmd')
-require('core.custom_functions')
+-- Load filetype configuration
+require("filetype")
+
+-- Load core configuration
+require("config.colors")
+require("config.options")
+require("config.keymaps")
+require("config.autocmds")
+require('config.commands')
+require("config.lazy")

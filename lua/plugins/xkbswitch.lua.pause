@@ -1,8 +1,0 @@
-return {
-  'lyokha/vim-xkbswitch',
-  enabled = true,
-  init = function ()
-    vim.g.XkbSwitchLib = '/home/qq/.config/xkb-switch/build/libxkbswitch.so'
-    vim.g.XkbSwitchEnabled = 1
-  end
-}

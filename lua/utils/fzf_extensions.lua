@@ -1,6 +1,7 @@
-local cf = require("core.custom_functions")
-
+local cf = require("utils.custom_functions") -- Updated path
 local M = {}
+
+-- Your existing functions with some improvements for consistency
 function M.backlinks()
   local note = cf.currentNoteId()
   require('fzf-lua').live_grep({
@@ -31,6 +32,7 @@ function M.findAroundNote()
   local month = string.sub(noteDate, 5, 6)
   local day = string.sub(noteDate, 7, 8)
   local query = string.format("rg --files | rg -e %s_?%s_?%s.* | sort --reverse", year, month, day)
+  
   require('fzf-lua').files({
     cmd = query,
     fzf_cli_args = '--preview-window=~1',
@@ -54,7 +56,6 @@ end
 
 function M.listOfNotes()
   require('fzf-lua').files({
-    --cmd = "rg --files -g *.md --sortr=path",
     cmd = "rg --files -g *.md | sort --reverse",
     fzf_cli_args = '--preview-window=~1',
     fzf_opts = {
@@ -78,8 +79,6 @@ end
 function M.journalList()
   require('fzf-lua').files({
     cmd = "rg --files -g *_*_*.md | sort --reverse",
-    --cmd = "rg --files | rg '[0-9]*_[0-9]*_[0-9]*.md' | sort --reverse",
-    --cmd = 'rg [0-9]*_[0-9]*_[0-9]*.md',
     fzf_cli_args = '--preview-window=~1',
     fzf_opts = {
       ["--tiebreak"] = "begin",
@@ -114,10 +113,9 @@ function M.insertHeadId()
       }
     },
     actions = {
-      ['default'] = function(selected, _) -- _ = opts
+      ['default'] = function(selected)
         local cwd = vim.loop.cwd()
         local file_md = string.match(selected[1], "[0-9].*%.md")
-
         local path_to_file = cwd .. "/" .. file_md
         local file = io.open(path_to_file, "r")
         if file == nil then
@@ -125,12 +123,9 @@ function M.insertHeadId()
         end
         local header = file:read()
         file:close()
-
         local ztl_id = "[[" .. file_md:sub(1, -4) .. "]]"
-
         local output = ztl_id .. " " .. cf.cleanHeadline(header):lower()
         cf.textInsert(output)
-        ---vim.api.nvim_put({ output }, "", true, true)
       end
     }
   })
@@ -157,18 +152,15 @@ function M.insertId()
     },
     actions = {
       ['default'] = function(selected)
-        --local file_md = string.match(selected[1], "[0-9]+%.md")
         local file_md = string.match(selected[1], "[0-9].*%.md")
         local ztl_id = "[[" .. file_md:sub(1, -4) .. "]]"
         cf.textInsert(ztl_id)
-        --vim.api.nvim_put({ ztl_id }, "", true, true)
       end
     }
   })
 end
 
 function M.openFile()
-  -- live_grep to start with rg not fuzzy search
   require('fzf-lua').grep({
     search = '',
     fzf_cli_args = '--preview-window=~1',
@@ -186,10 +178,10 @@ function M.openFile()
 end
 
 function M.insertTag()
-  require('fzf-lua').fzf_exec("cat .tags_index",{
+  require('fzf-lua').fzf_exec("cat .tags_index", {
     fzf_opts = {
       ["--tiebreak"] = "length,begin",
-      ["--multi"]     = true,
+      ["--multi"] = true,
     },
     keymap = {
       fzf = {
